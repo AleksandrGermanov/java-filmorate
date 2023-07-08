@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController {
     @Getter
-    private final static Map<Integer, Film> films = new HashMap<>();
+    private static final  Map<Integer, Film> films = new HashMap<>();
     private static int idCounter; //пока нет более внятного присвоения id
 
     @GetMapping
