@@ -23,11 +23,11 @@ public class IdValidator implements ConstraintValidator<IsInSet, Integer> {
         return getSet().contains(integer);
     }
 
-    public Set<Integer> getSet(){
-        if (clas.equals(FilmController.class)){
+    public Set<Integer> getSet() {
+        if (clas.equals(FilmController.class)) {
             return FilmController.getFilms().keySet();
         }
-        if(clas.equals(UserController.class)){
+        if (clas.equals(UserController.class)) {
             return UserController.getUsers().keySet();
         }
         return Collections.emptySet();

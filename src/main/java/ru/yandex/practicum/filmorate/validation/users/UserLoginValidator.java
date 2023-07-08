@@ -8,8 +8,8 @@ import javax.validation.ConstraintValidatorContext;
 @Slf4j
 public class UserLoginValidator implements ConstraintValidator<NoSpaceSigns, String> {
     @Override
-    public boolean isValid(String login, ConstraintValidatorContext context){
-        if (login != null && !login.isBlank()){
+    public boolean isValid(String login, ConstraintValidatorContext context) {
+        if (login != null && !login.isBlank()) {
             return !login.contains(" ");
         }
         log.info("Login is null or blank. Validation succeed");
