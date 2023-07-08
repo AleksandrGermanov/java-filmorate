@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UserLoginValidator.class)
 public @interface NoSpaceSigns {
     String message() default "Логин не должен содержать пробелов";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

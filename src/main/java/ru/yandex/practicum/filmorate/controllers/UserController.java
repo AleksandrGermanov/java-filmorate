@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
     @Getter
-    private final static Map<Integer, User> users = new HashMap<>();
+    private static final Map<Integer, User> users = new HashMap<>();
     private static int idCounter; //пока нет более внятного присвоения id
 
     @GetMapping

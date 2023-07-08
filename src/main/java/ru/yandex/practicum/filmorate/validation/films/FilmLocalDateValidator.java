@@ -10,9 +10,9 @@ import java.time.LocalDate;
 public class FilmLocalDateValidator
         implements ConstraintValidator<AfterCinemaWasBorn, LocalDate> {
     @Override
-    public boolean isValid(LocalDate date, ConstraintValidatorContext context){
-        if (date!=null){
-            return date.isAfter(LocalDate.of(1895, 12,28));
+    public boolean isValid(LocalDate date, ConstraintValidatorContext context) {
+        if (date != null) {
+            return date.isAfter(LocalDate.of(1895, 12, 28));
         }
         log.info("Date is null. Validation succeed.");
         return true;

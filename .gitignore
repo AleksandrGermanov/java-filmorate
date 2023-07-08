@@ -2,6 +2,7 @@ HELP.md
 target/
 .mvn/
 mvnw
+checkstyle.xml
 mvnw.cmd
 !**/src/main/**/target/
 !**/src/test/**/target/

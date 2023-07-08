@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.validation.films;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controllers.FilmController;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.validation.Markers;
 import ru.yandex.practicum.filmorate.validation.ValidatorForTests;
-import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -38,14 +38,14 @@ public class FilmTests {
     }
 
     @Test
-    void validateFilmWithUnknownIdOnUpdate(){
+    void validateFilmWithUnknownIdOnUpdate() {
         film.setId(-1);
         assertThrows(ConstraintViolationException.class,
                 () -> filmValidator.isParameterValid(film, Markers.OnUpdate.class));
     }
 
     @Test
-    void validateFilmWithKnownIdOnUpdate(){
+    void validateFilmWithKnownIdOnUpdate() {
         FilmController fc = new FilmController();
 
         fc.createFilm(film);
@@ -68,7 +68,7 @@ public class FilmTests {
 
     @Test
     void validateFilmWithWrongReleaseDate() {
-        film.setReleaseDate(LocalDate.of(1010,10,10));
+        film.setReleaseDate(LocalDate.of(1010, 10, 10));
         assertThrows(ConstraintViolationException.class, () -> filmValidator.isParameterValid(film));
     }
 

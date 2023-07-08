@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.validation.users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controllers.UserController;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validation.Markers;
 import ru.yandex.practicum.filmorate.validation.ValidatorForTests;
-import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -38,14 +38,14 @@ public class UserTests {
     }
 
     @Test
-    void validateUserWithUnknownIdOnUpdate(){
+    void validateUserWithUnknownIdOnUpdate() {
         user.setId(-1);
         assertThrows(ConstraintViolationException.class,
                 () -> userValidator.isParameterValid(user, Markers.OnUpdate.class));
     }
 
     @Test
-    void validateUserWithKnownIdOnUpdate(){
+    void validateUserWithKnownIdOnUpdate() {
         UserController uc = new UserController();
 
         uc.createUser(user);
