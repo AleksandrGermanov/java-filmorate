@@ -39,6 +39,7 @@ public class FilmTests {
 
     @Test
     void validateFilmWithUnknownIdOnUpdate(){
+        film.setId(-1);
         assertThrows(ConstraintViolationException.class,
                 () -> filmValidator.isParameterValid(film, Markers.OnUpdate.class));
     }

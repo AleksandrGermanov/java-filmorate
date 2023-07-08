@@ -39,6 +39,7 @@ public class UserTests {
 
     @Test
     void validateUserWithUnknownIdOnUpdate(){
+        user.setId(-1);
         assertThrows(ConstraintViolationException.class,
                 () -> userValidator.isParameterValid(user, Markers.OnUpdate.class));
     }
