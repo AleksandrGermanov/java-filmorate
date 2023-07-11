@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
-
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> errorResponseBody(ConstraintViolationException e) {
@@ -25,7 +24,7 @@ public class ExceptionControllerAdvice {
                 .forEach(message::append);
         String formedMessage = message.toString();
         log.warn(formedMessage);
-        return new ResponseEntity<>('\"' + formedMessage + '\"', HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>('\"' + formedMessage + '\"', HttpStatus.NOT_FOUND);
     }
 
     @ResponseBody
