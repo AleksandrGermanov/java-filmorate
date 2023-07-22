@@ -21,7 +21,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User create(User user) {
         user.setId(generateId());
         log.info("POST /users is successfully proceed. User id = " + user.getId() + ".");
-        if (user.getName() == null) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         users.put(user.getId(), user);
@@ -30,8 +30,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User retrieve(int id) {
-        //TODO заглушка!
-        return null;
+        return users.get(id);
     }
 
     @Override

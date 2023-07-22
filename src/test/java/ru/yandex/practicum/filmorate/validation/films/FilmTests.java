@@ -4,7 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.validation.Markers;
+import ru.yandex.practicum.filmorate.service.film.DefaultFilmService;
+import ru.yandex.practicum.filmorate.service.validation.Markers;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.validation.ValidatorForTests;
 
 import javax.validation.ConstraintViolationException;
@@ -46,7 +49,8 @@ public class FilmTests {
 
     @Test
     void validateFilmWithKnownIdOnUpdate() {
-        FilmController fc = new FilmController();
+        FilmController fc = new FilmController(new InMemoryFilmStorage(), new InMemoryUserStorage(),
+                new DefaultFilmService());
 
         fc.createFilm(film);
         film.setName("Updated");

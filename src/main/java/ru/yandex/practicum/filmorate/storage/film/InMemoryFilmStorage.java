@@ -27,8 +27,8 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film retrieve(int id) {
-        //TODO заглушка!
-        return null;
+        log.info("GET /films/{id} is successfully proceed. Film id = " + id + ".");
+        return films.get(id);
     }
 
     @Override

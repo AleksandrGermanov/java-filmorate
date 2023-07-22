@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.validation.films;
+package ru.yandex.practicum.filmorate.service.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -7,13 +7,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FilmLocalDateValidator.class)
-public @interface AfterCinemaWasBorn {
-    String message() default "Дата не может быть ранее 28 декабря 1895г.";
+@Constraint(validatedBy = IdValidator.class)
+public @interface IsInSet {
+    String message() default ("Id не найден.");
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    Class<?> setHolder();
 }

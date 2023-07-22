@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validation.Markers;
+import ru.yandex.practicum.filmorate.service.user.DefaultUserService;
+import ru.yandex.practicum.filmorate.service.validation.Markers;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.validation.ValidatorForTests;
 
 import javax.validation.ConstraintViolationException;
@@ -46,7 +48,8 @@ public class UserTests {
 
     @Test
     void validateUserWithKnownIdOnUpdate() {
-        UserController uc = new UserController();
+        UserController uc = new UserController(new InMemoryUserStorage(),
+                new DefaultUserService(new InMemoryUserStorage()));
 
         uc.createUser(user);
         user.setName("Updated");
