@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,16 +41,16 @@ public class FilmControllerTests {
     @Test
     void controllerPutsFilmToMapOnCreation() {
         fc.createFilm(film);
-        assertEquals(film, FilmController.getFilms().get(film.getId()));
+        assertEquals(film, InMemoryFilmStorage.getFilms().get(film.getId()));
     }
 
     @Test
     void controllerReturnsSameFilmAsInMapOnCreation() {
-        assertEquals(fc.createFilm(film), FilmController.getFilms().get(film.getId()));
+        assertEquals(fc.createFilm(film), InMemoryFilmStorage.getFilms().get(film.getId()));
     }
 
     @Test
     void controllerReturnsSameFilmAsInMapOnUpdate() {
-        assertEquals(fc.updateFilm(film), FilmController.getFilms().get(film.getId()));
+        assertEquals(fc.updateFilm(film), InMemoryFilmStorage.getFilms().get(film.getId()));
     }
 }

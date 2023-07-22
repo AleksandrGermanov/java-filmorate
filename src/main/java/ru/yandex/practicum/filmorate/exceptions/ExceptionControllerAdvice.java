@@ -45,7 +45,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> errorResponseBody(Exception e) {
         String message = "Unknown Exception has occurred: " + e.getClass()
-                + " with message \'" + e.getMessage() + "\'.";
+                + " with message '" + e.getMessage() + "'.";
         log.warn(message + "StackTrace: " + e.getStackTrace());
         return new ResponseEntity<>('\"' + message + '\"', HttpStatus.INTERNAL_SERVER_ERROR);
     }

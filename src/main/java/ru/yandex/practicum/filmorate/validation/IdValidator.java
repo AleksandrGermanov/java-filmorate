@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validation;
 
-import ru.yandex.practicum.filmorate.controllers.FilmController;
-import ru.yandex.practicum.filmorate.controllers.UserController;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -24,11 +24,11 @@ public class IdValidator implements ConstraintValidator<IsInSet, Integer> {
     }
 
     public Set<Integer> getSet() {
-        if (clas.equals(FilmController.class)) {
-            return FilmController.getFilms().keySet();
+        if (clas.equals(InMemoryFilmStorage.class)) {
+            return InMemoryFilmStorage.getFilms().keySet();
         }
-        if (clas.equals(UserController.class)) {
-            return UserController.getUsers().keySet();
+        if (clas.equals(InMemoryUserStorage.class)) {
+            return InMemoryUserStorage.getUsers().keySet();
         }
         return Collections.emptySet();
     }

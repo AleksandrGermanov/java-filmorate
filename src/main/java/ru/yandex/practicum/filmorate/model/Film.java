@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.validation.IsInSet;
 import ru.yandex.practicum.filmorate.validation.Markers;
 import ru.yandex.practicum.filmorate.validation.films.AfterCinemaWasBorn;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Validated
 public class Film {
 
-    @IsInSet(groups = Markers.OnUpdate.class, setHolder = FilmController.class)
+    @IsInSet(groups = Markers.OnUpdate.class, setHolder = InMemoryFilmStorage.class)
     private int id;
     @NotBlank(message = "Имя не должно быть пустым.")
     private String name;
