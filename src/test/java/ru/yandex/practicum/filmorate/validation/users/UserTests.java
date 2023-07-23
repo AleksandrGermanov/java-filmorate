@@ -48,8 +48,7 @@ public class UserTests {
 
     @Test
     void validateUserWithKnownIdOnUpdate() {
-        UserController uc = new UserController(new InMemoryUserStorage(),
-                new DefaultUserService(new InMemoryUserStorage()));
+        UserController uc = new UserController(new DefaultUserService(new InMemoryUserStorage()));
 
         uc.createUser(user);
         user.setName("Updated");

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class UserControllerTests {
-    UserController uc = new UserController(new InMemoryUserStorage(), new DefaultUserService(new InMemoryUserStorage()));
+    UserController uc = new UserController(new DefaultUserService(new InMemoryUserStorage()));
     User user;
 
     @BeforeEach

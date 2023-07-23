@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.DefaultFilmService;
+import ru.yandex.practicum.filmorate.service.user.DefaultUserService;
 import ru.yandex.practicum.filmorate.service.validation.Markers;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
@@ -49,8 +50,8 @@ public class FilmTests {
 
     @Test
     void validateFilmWithKnownIdOnUpdate() {
-        FilmController fc = new FilmController(new InMemoryFilmStorage(), new InMemoryUserStorage(),
-                new DefaultFilmService());
+        FilmController fc = new FilmController(new DefaultUserService(new InMemoryUserStorage()),
+                new DefaultFilmService(new InMemoryFilmStorage()));
 
         fc.createFilm(film);
         film.setName("Updated");

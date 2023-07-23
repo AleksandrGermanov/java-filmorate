@@ -1,23 +1,24 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserVisitor;
+import ru.yandex.practicum.filmorate.service.Visitor;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class DefaultUserService implements UserService {
+    @Getter
     private final UserStorage storage;
 
     @Override
     public void befriend(User userToVisitFirst, User userToBefriend) {
-        UserVisitor befriender = (u) -> {
+        Visitor<User> befriender = (u) -> {
             if (u.equals(userToVisitFirst)) {
                 u.getFriends().add(userToBefriend.getId());
             } else {
@@ -28,9 +29,10 @@ public class DefaultUserService implements UserService {
         userToBefriend.accept(befriender);
     }
 
+
     @Override
     public void unfriend(User userToVisitFirst, User userToUnfriend) {
-        UserVisitor unfriender = (u) -> {
+        Visitor<User> unfriender = (u) -> {
             if (u.equals(userToVisitFirst)) {
                 u.getFriends().add(userToUnfriend.getId());
             } else {

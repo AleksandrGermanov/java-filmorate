@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.service.FilmVisitor;
+import ru.yandex.practicum.filmorate.service.Visitor;
 import ru.yandex.practicum.filmorate.service.validation.IsInSet;
 import ru.yandex.practicum.filmorate.service.validation.Markers;
 import ru.yandex.practicum.filmorate.service.validation.films.AfterCinemaWasBorn;
@@ -43,7 +43,7 @@ public class Film implements Comparable<Film> {
         return 0;
     }
 
-    public void accept(FilmVisitor v) {
+    public void accept(Visitor<Film> v) {
         v.visit(this);
     }
 }

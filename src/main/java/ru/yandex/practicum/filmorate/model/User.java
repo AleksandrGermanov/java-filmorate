@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.service.UserVisitor;
+import ru.yandex.practicum.filmorate.service.Visitor;
 import ru.yandex.practicum.filmorate.service.validation.IsInSet;
 import ru.yandex.practicum.filmorate.service.validation.Markers;
 import ru.yandex.practicum.filmorate.service.validation.users.NoSpaceSigns;
@@ -32,7 +32,7 @@ public class User {
     @Past
     private LocalDate birthday;
 
-    public void accept(UserVisitor v) {
+    public void accept(Visitor<User> v) {
         v.visit(this);
     }
 }
