@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.service.Visitor;
-import ru.yandex.practicum.filmorate.service.validation.IsInSet;
-import ru.yandex.practicum.filmorate.service.validation.Markers;
 import ru.yandex.practicum.filmorate.service.validation.users.NoSpaceSigns;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -21,7 +18,6 @@ import java.util.Set;
 public class User {
     @Getter
     private final Set<Integer> friends = new HashSet<>();
-    @IsInSet(groups = Markers.OnUpdate.class, setHolder = InMemoryUserStorage.class)
     private int id;
     @Email
     private String email;

@@ -2,17 +2,14 @@ package ru.yandex.practicum.filmorate.validation.users;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.user.DefaultUserService;
-import ru.yandex.practicum.filmorate.service.validation.Markers;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.validation.ValidatorForTests;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserTests {
     private final ValidatorForTests<User> userValidator = new ValidatorForTests<>();
@@ -37,22 +34,6 @@ public class UserTests {
     @Test
     void validateDefaultUser() {
         assertTrue(userValidator.isParameterValid(user));
-    }
-
-    @Test
-    void validateUserWithUnknownIdOnUpdate() {
-        user.setId(-1);
-        assertThrows(ConstraintViolationException.class,
-                () -> userValidator.isParameterValid(user, Markers.OnUpdate.class));
-    }
-
-    @Test
-    void validateUserWithKnownIdOnUpdate() {
-        UserController uc = new UserController(new DefaultUserService(new InMemoryUserStorage()));
-
-        uc.createUser(user);
-        user.setName("Updated");
-        assertDoesNotThrow(() -> userValidator.isParameterValid(user, Markers.OnUpdate.class));
     }
 
     @Test

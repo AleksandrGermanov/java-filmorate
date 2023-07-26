@@ -7,9 +7,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
-import ru.yandex.practicum.filmorate.service.validation.IsInSet;
-import ru.yandex.practicum.filmorate.service.validation.Markers;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,52 +21,48 @@ public class UserController {
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userService.getStorage().findAll();
+        return userService.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody User user) {
-        return userService.getStorage().create(user);
+        return userService.create(user);
     }
 
     @PutMapping
-    @Validated(Markers.OnUpdate.class)
     public User updateUser(@Valid @RequestBody User user) {
-        return userService.getStorage().update(user);
+        return userService.update(user);
     }
 
     @GetMapping("/{id}")
-    public User retrieve(
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int id) {
-        return userService.getStorage().retrieve(id);
+    public User retrieve(@PathVariable int id) {
+        return userService.retrieve(id);
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> findAllFriends(
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int id) {
-        return userService.findAllFriends(userService.getStorage().retrieve(id));
+    public List<User> findAllFriends(@PathVariable int id) {
+        return userService.findAllFriends(userService.retrieve(id));
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> findCommonFriends(
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int id,
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int otherId) {
-        return userService.findCommonFriends(userService.getStorage().retrieve(id),
-                userService.getStorage().retrieve(otherId));
+    public List<User> findCommonFriends(@PathVariable int id,
+                                        @PathVariable int otherId) {
+        return userService.findCommonFriends(userService.retrieve(id),
+                userService.retrieve(otherId));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public void befriend(
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int id,
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int friendId) {
-        userService.befriend(userService.getStorage().retrieve(id), userService.getStorage().retrieve(friendId));
+            @PathVariable int id,
+            @PathVariable int friendId) {
+        userService.befriend(userService.retrieve(id), userService.retrieve(friendId));
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public void unfriend(
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int id,
-            @IsInSet(setHolder = InMemoryUserStorage.class) @PathVariable int friendId) {
-        userService.unfriend(userService.getStorage().retrieve(id), userService.getStorage().retrieve(friendId));
+            @PathVariable int id,
+            @PathVariable int friendId) {
+        userService.unfriend(userService.retrieve(id), userService.retrieve(friendId));
     }
 }

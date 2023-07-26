@@ -2,10 +2,11 @@ package ru.yandex.practicum.filmorate.service.user;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+
 import java.util.List;
 
 @Service
+
 public interface UserService {
     void befriend(User userToVisit, User userToBefriend);
 
@@ -15,5 +16,15 @@ public interface UserService {
 
     List<User> findAllFriends(User user);
 
-    UserStorage getStorage();
+    boolean validateId(int id);
+
+    boolean validateId(User user);
+
+    User create(User user);
+
+    User retrieve(int id);
+
+    User update(User user);
+
+    List<User> findAll();
 }

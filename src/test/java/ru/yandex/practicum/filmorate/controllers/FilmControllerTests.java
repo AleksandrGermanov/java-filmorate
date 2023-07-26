@@ -3,8 +3,8 @@ package ru.yandex.practicum.filmorate.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.film.DefaultFilmService;
-import ru.yandex.practicum.filmorate.service.user.DefaultUserService;
+import ru.yandex.practicum.filmorate.service.film.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class FilmControllerTests {
-    FilmController fc = new FilmController(new DefaultUserService(new InMemoryUserStorage()),
-            new DefaultFilmService(new InMemoryFilmStorage()));
+    FilmController fc = new FilmController(new UserServiceImpl(new InMemoryUserStorage()),
+            new FilmServiceImpl(new InMemoryFilmStorage(),
+                    new UserServiceImpl(new InMemoryUserStorage())));
     Film film;
 
     @BeforeEach
@@ -55,6 +56,8 @@ public class FilmControllerTests {
 
     @Test
     void controllerReturnsSameFilmAsInMapOnUpdate() {
+        fc.createFilm(new Film());
+        film = InMemoryFilmStorage.getFilms().get(1);
         assertEquals(fc.updateFilm(film), InMemoryFilmStorage.getFilms().get(film.getId()));
     }
 }

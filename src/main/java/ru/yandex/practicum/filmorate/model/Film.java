@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.service.Visitor;
-import ru.yandex.practicum.filmorate.service.validation.IsInSet;
-import ru.yandex.practicum.filmorate.service.validation.Markers;
 import ru.yandex.practicum.filmorate.service.validation.films.AfterCinemaWasBorn;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -21,7 +18,6 @@ import java.util.Set;
 public class Film implements Comparable<Film> {
     @Getter
     private final Set<Integer> likes = new HashSet<>();
-    @IsInSet(groups = Markers.OnUpdate.class, setHolder = InMemoryFilmStorage.class)
     private int id;
     @NotBlank(message = "Имя не должно быть пустым.")
     private String name;
@@ -34,13 +30,7 @@ public class Film implements Comparable<Film> {
 
     @Override
     public int compareTo(Film o) {
-        if (likes.size() > o.likes.size()) {
-            return 1;
-        }
-        if (likes.size() < o.likes.size()) {
-            return -1;
-        }
-        return 0;
+        return Integer.compare(likes.size(), o.likes.size());
     }
 
     public void accept(Visitor<Film> v) {
