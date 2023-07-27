@@ -2,15 +2,14 @@ package ru.yandex.practicum.filmorate.validation.films;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.validation.Markers;
 import ru.yandex.practicum.filmorate.validation.ValidatorForTests;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FilmTests {
     private final ValidatorForTests<Film> filmValidator = new ValidatorForTests<>();
@@ -35,22 +34,6 @@ public class FilmTests {
     @Test
     void validateDefaultFilm() {
         assertTrue(filmValidator.isParameterValid(film));
-    }
-
-    @Test
-    void validateFilmWithUnknownIdOnUpdate() {
-        film.setId(-1);
-        assertThrows(ConstraintViolationException.class,
-                () -> filmValidator.isParameterValid(film, Markers.OnUpdate.class));
-    }
-
-    @Test
-    void validateFilmWithKnownIdOnUpdate() {
-        FilmController fc = new FilmController();
-
-        fc.createFilm(film);
-        film.setName("Updated");
-        assertDoesNotThrow(() -> filmValidator.isParameterValid(film, Markers.OnUpdate.class));
     }
 
     @Test

@@ -1,22 +1,23 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
-import ru.yandex.practicum.filmorate.validation.IsInSet;
-import ru.yandex.practicum.filmorate.validation.Markers;
-import ru.yandex.practicum.filmorate.validation.films.AfterCinemaWasBorn;
+import ru.yandex.practicum.filmorate.service.Visitor;
+import ru.yandex.practicum.filmorate.service.validation.films.AfterCinemaWasBorn;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Validated
-public class Film {
-
-    @IsInSet(groups = Markers.OnUpdate.class, setHolder = FilmController.class)
+public class Film implements Comparable<Film> {
+    @Getter
+    private final Set<Integer> likes = new HashSet<>();
     private int id;
     @NotBlank(message = "Имя не должно быть пустым.")
     private String name;
@@ -26,4 +27,13 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
+
+    @Override
+    public int compareTo(Film o) {
+        return Integer.compare(likes.size(), o.likes.size());
+    }
+
+    public void accept(Visitor<Film> v) {
+        v.visit(this);
+    }
 }

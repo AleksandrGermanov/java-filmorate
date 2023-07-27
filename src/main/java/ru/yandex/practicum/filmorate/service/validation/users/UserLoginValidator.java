@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.validation.users;
+package ru.yandex.practicum.filmorate.service.validation.users;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +12,7 @@ public class UserLoginValidator implements ConstraintValidator<NoSpaceSigns, Str
         if (login != null && !login.isBlank()) {
             return !login.contains(" ");
         }
-        log.info("Login is null or blank. Validation succeed");
+        log.info("Validation succeed.");
         return true;
     }
 }

@@ -1,22 +1,23 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.validation.annotation.Validated;
-import ru.yandex.practicum.filmorate.controllers.UserController;
-import ru.yandex.practicum.filmorate.validation.IsInSet;
-import ru.yandex.practicum.filmorate.validation.Markers;
-import ru.yandex.practicum.filmorate.validation.users.NoSpaceSigns;
+import ru.yandex.practicum.filmorate.service.Visitor;
+import ru.yandex.practicum.filmorate.service.validation.users.NoSpaceSigns;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Validated
 public class User {
-
-    @IsInSet(groups = Markers.OnUpdate.class, setHolder = UserController.class)
+    @Getter
+    private final Set<Integer> friends = new HashSet<>();
     private int id;
     @Email
     private String email;
@@ -26,4 +27,8 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
+
+    public void accept(Visitor<User> v) {
+        v.visit(this);
+    }
 }

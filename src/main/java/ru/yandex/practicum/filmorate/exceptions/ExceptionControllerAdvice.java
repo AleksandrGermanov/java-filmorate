@@ -5,15 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
-    @ResponseBody
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> errorResponseBody(ConstraintViolationException e) {
         StringBuilder message = new StringBuilder();
@@ -27,7 +27,6 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>('\"' + formedMessage + '\"', HttpStatus.NOT_FOUND);
     }
 
-    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> errorResponseBody(MethodArgumentNotValidException e) {
         StringBuilder message = new StringBuilder();
@@ -41,12 +40,19 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>('\"' + formedMessage + '\"', HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseBody
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> errorResponseBody(Exception e) {
         String message = "Unknown Exception has occurred: " + e.getClass()
-                + " with message \'" + e.getMessage() + "\'.";
-        log.warn(message + "StackTrace: " + e.getStackTrace());
+                + " with message '" + e.getMessage() + "'.";
+        log.warn(message + "StackTrace: " + Arrays.toString(e.getStackTrace()));
         return new ResponseEntity<>('\"' + message + '\"', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MatchesNotFoundException.class)
+    public ResponseEntity<String> errorResponseBody(MatchesNotFoundException e) {
+        String message = "MatchesNotFoundException has occurred: " + e.getClass()
+                + " with message '" + e.getMessage() + "'.";
+        log.warn(message);
+        return new ResponseEntity<>('\"' + message + '\"', HttpStatus.NOT_FOUND);
     }
 }

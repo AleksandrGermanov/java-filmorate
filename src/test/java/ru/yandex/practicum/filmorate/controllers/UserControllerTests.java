@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class UserControllerTests {
-    UserController uc = new UserController();
+    UserController uc = new UserController(new UserServiceImpl(new InMemoryUserStorage()));
     User user;
 
     @BeforeEach
@@ -21,7 +23,7 @@ public class UserControllerTests {
         user.setName("Name");
         user.setLogin("login");
         user.setEmail("e@mail.fake");
-        user.setBirthday(LocalDate.of(2023, 07, 07));
+        user.setBirthday(LocalDate.of(2023, 7, 7));
     }
 
     @Test
@@ -40,12 +42,12 @@ public class UserControllerTests {
     @Test
     void controllerPutsUserToMapOnCreation() {
         uc.createUser(user);
-        assertEquals(user, UserController.getUsers().get(user.getId()));
+        assertEquals(user, InMemoryUserStorage.getUsers().get(user.getId()));
     }
 
     @Test
     void controllerReturnsSameUserAsInMapOnCreation() {
-        assertEquals(uc.createUser(user), UserController.getUsers().get(user.getId()));
+        assertEquals(uc.createUser(user), InMemoryUserStorage.getUsers().get(user.getId()));
     }
 
     @Test
@@ -57,6 +59,8 @@ public class UserControllerTests {
 
     @Test
     void controllerReturnsSameUserAsInMapOnUpdate() {
-        assertEquals(uc.updateUser(user), UserController.getUsers().get(user.getId()));
+        uc.createUser(new User());
+        user = InMemoryUserStorage.getUsers().get(1);
+        assertEquals(uc.updateUser(user), InMemoryUserStorage.getUsers().get(user.getId()));
     }
 }
