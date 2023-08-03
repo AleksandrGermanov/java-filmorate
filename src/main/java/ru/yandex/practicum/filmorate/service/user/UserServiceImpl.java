@@ -40,9 +40,9 @@ public class UserServiceImpl implements UserService {
         validateId(userToUnfriend);
         Visitor<User> unfriender = (u) -> {
             if (u.equals(userToVisitFirst)) {
-                u.getFriends().add(userToUnfriend.getId());
+                u.getFriends().remove(userToUnfriend.getId());
             } else {
-                u.getFriends().add(userToVisitFirst.getId());
+                u.getFriends().remove(userToVisitFirst.getId());
             }
         };
         userToVisitFirst.accept(unfriender);
