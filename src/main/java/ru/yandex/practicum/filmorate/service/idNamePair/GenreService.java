@@ -14,23 +14,23 @@ import java.util.stream.Collectors;
 @Slf4j
 @Data
 public class GenreService implements IdNamePairService<Genre> {
-    private final GenreDBStorage storage;
+    private final GenreDBStorage genreDBStorage;
 
     @Override
     public List<Genre> findAll() {
         log.info("Proceeding findAll().");
-        return storage.findAll();
+        return genreDBStorage.findAll();
     }
 
     @Override
     public Genre retrieve(int id) {
         log.info("Proceeding retrieve() with id = " + id + ".");
         validateId(id);
-        return storage.retrieve(id);
+        return genreDBStorage.retrieve(id);
     }
 
     public boolean validateId(int id) {
-        boolean value = storage.findAll().stream()
+        boolean value = genreDBStorage.findAll().stream()
                 .map(Genre::getId)
                 .collect(Collectors.toSet())
                 .contains(id);

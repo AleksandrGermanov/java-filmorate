@@ -45,14 +45,14 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     public List<User> findAllFriends(@PathVariable int id) {
-        log.info("Endpoint /films/{id}/friends} invoked (GET)");
+        log.info("Endpoint /users/{id}/friends} invoked (GET)");
         return userService.findAllFriends(userService.retrieve(id));
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> findCommonFriends(@PathVariable int id,
                                         @PathVariable int otherId) {
-        log.info("Endpoint /films/{id}/friends/common/{otherId}} invoked (GET)");
+        log.info("Endpoint /users/{id}/friends/common/{otherId}} invoked (GET)");
         return userService.findCommonFriends(userService.retrieve(id),
                 userService.retrieve(otherId));
     }
@@ -61,7 +61,7 @@ public class UserController {
     public void befriend(
             @PathVariable int id,
             @PathVariable int friendId) {
-        log.info("Endpoint /films/{id}/friends/{friendId}} invoked (PUT)");
+        log.info("Endpoint /users/{id}/friends/{friendId}} invoked (PUT)");
         UserServiceImpl service = (UserServiceImpl) userService;
         service.befriendAndAccept(userService.retrieve(friendId), userService.retrieve(id));
     }
@@ -70,7 +70,7 @@ public class UserController {
     public void unfriend(
             @PathVariable int id,
             @PathVariable int friendId) {
-        log.info("Endpoint /films/{id}/friends/{friendId}} invoked (DELETE)");
+        log.info("Endpoint /users/{id}/friends/{friendId}} invoked (DELETE)");
         userService.unfriend(userService.retrieve(id), userService.retrieve(friendId));
     }
 }

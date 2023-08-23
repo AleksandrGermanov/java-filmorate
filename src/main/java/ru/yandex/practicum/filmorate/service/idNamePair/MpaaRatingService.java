@@ -14,23 +14,23 @@ import java.util.stream.Collectors;
 @Slf4j
 @Data
 public class MpaaRatingService implements IdNamePairService<MpaaRating> {
-    private final MpaaRatingDBStorage storage;
+    private final MpaaRatingDBStorage mpaaRatingDBStorage;
 
     @Override
     public List<MpaaRating> findAll() {
         log.info("Proceeding findAll().");
-        return storage.findAll();
+        return mpaaRatingDBStorage.findAll();
     }
 
     @Override
     public MpaaRating retrieve(int id) {
         log.info("Proceeding retrieve() with id = " + id + ".");
         validateId(id);
-        return storage.retrieve(id);
+        return mpaaRatingDBStorage.retrieve(id);
     }
 
     private boolean validateId(int id) {
-        boolean value = storage.findAll().stream()
+        boolean value = mpaaRatingDBStorage.findAll().stream()
                 .map(MpaaRating::getId)
                 .collect(Collectors.toSet())
                 .contains(id);

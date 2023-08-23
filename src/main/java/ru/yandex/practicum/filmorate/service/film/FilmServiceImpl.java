@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service.film;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Validated
 public class FilmServiceImpl implements FilmService {
-    @Getter
-    private final FilmStorage storage;
+    private final FilmStorage filmStorage;
     private final UserService userService;
 
     @Override
@@ -32,7 +30,7 @@ public class FilmServiceImpl implements FilmService {
         userService.validateId(whoLikes);
         Visitor<Film> likeGiver = (fi) -> {
             fi.getLikes().add(whoLikes.getId());
-            storage.update(fi);
+            filmStorage.update(fi);
         };
         film.accept(likeGiver);
     }
@@ -44,7 +42,7 @@ public class FilmServiceImpl implements FilmService {
         userService.validateId(whoTakesLikeBack);
         Visitor<Film> likeTaker = (fi) -> {
             fi.getLikes().remove(whoTakesLikeBack.getId());
-            storage.update(fi);
+            filmStorage.update(fi);
         };
         film.accept(likeTaker);
     }
@@ -52,7 +50,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> findMostLiked(int count) {
         log.info("Proceeding findMostLiked() with count = " + count + ".");
-        return storage.findAll().stream()
+        return filmStorage.findAll().stream()
                 .sorted(Collections.reverseOrder())
                 .limit(count)
                 .collect(Collectors.toList());
@@ -60,7 +58,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public boolean validateId(int id) {
-        boolean value = storage.findAll().stream()
+        boolean value = filmStorage.findAll().stream()
                 .map(Film::getId)
                 .collect(Collectors.toSet())
                 .contains(id);
@@ -78,27 +76,27 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film create(Film film) {
         log.info("Proceeding findMostLiked() with film = " + film.getId() + ".");
-        return storage.create(film);
+        return filmStorage.create(film);
     }
 
     @Override
     public Film retrieve(int id) {
         log.info("Proceeding retrieve() with film = " + id + ".");
         validateId(id);
-        return storage.retrieve(id);
+        return filmStorage.retrieve(id);
     }
 
     @Override
     public Film update(Film film) {
         log.info("Proceeding retrieve() with film = " + film.getId() + ".");
         validateId(film);
-        return storage.update(film);
+        return filmStorage.update(film);
     }
 
     @Override
     public List<Film> findAll() {
         log.info("Proceeding findAll().");
-        return storage.findAll();
+        return filmStorage.findAll();
     }
 }
 

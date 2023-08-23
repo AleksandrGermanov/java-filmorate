@@ -9,14 +9,13 @@ import java.util.List;
 
 
 public abstract class IdNamePairDBStorage<T extends IdNamePair> implements IdNamePairStorage<T> {
-    protected String tableName;
-    protected JdbcTemplate template;
-
     private final RowMapper<T> rowMapper = (rs, rn) -> {
         Integer id = rs.getInt("id");
         String name = rs.getString("name");
         return pairOf(id, name);
     };
+    protected String tableName;
+    protected JdbcTemplate template;
 
     public IdNamePairDBStorage(JdbcTemplate template, String tableName) {
         this.template = template;

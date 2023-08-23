@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class IdNamePairController {
+public class MpaGenreController {
     private final MpaaRatingService mpaaService;
     private final GenreService genreService;
 

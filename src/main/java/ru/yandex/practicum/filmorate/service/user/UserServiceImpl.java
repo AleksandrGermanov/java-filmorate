@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service.user;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,8 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final FriendshipRequestStorage requestStorage;
-    @Getter
-    private final UserStorage storage;
+    private final UserStorage userStorage;
 
     @Override
     public void befriend(User requestExporter, User requestImporter) {
@@ -82,7 +80,7 @@ public class UserServiceImpl implements UserService {
         validateId(userToFindCommonsWith);
         return user.getFriends().stream()
                 .filter(id -> userToFindCommonsWith.getFriends().contains(id))
-                .map(storage::retrieve)
+                .map(userStorage::retrieve)
                 .collect(Collectors.toList());
     }
 
@@ -90,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllFriends(User user) {
         log.info("Proceeding findAllFriends() with user = " + user.getId() + ".");
         return user.getFriends().stream()
-                .map(storage::retrieve)
+                .map(userStorage::retrieve)
                 .collect(Collectors.toList());
     }
 
@@ -100,32 +98,32 @@ public class UserServiceImpl implements UserService {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        return storage.create(user);
+        return userStorage.create(user);
     }
 
     @Override
     public User retrieve(int id) {
         log.info("Proceeding retrieve() with id = " + id + ".");
         validateId(id);
-        return storage.retrieve(id);
+        return userStorage.retrieve(id);
     }
 
     @Override
     public User update(User user) {
         log.info("Proceeding update() with user = " + user.getId() + ".");
         validateId(user);
-        return storage.update(user);
+        return userStorage.update(user);
     }
 
     @Override
     public List<User> findAll() {
         log.info("Proceeding findAll().");
-        return storage.findAll();
+        return userStorage.findAll();
     }
 
     @Override
     public boolean validateId(int id) {
-        boolean value = storage.findAll().stream()
+        boolean value = userStorage.findAll().stream()
                 .map(User::getId)
                 .collect(Collectors.toSet())
                 .contains(id);
