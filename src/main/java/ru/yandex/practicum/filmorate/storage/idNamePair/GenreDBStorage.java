@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 
 @Component
 public class GenreDBStorage extends IdNamePairDBStorage<Genre> {
-    private final static String tableName = "genres";
+    private static final String tableName = "genres";
 
     @Autowired
     public GenreDBStorage(JdbcTemplate template) {

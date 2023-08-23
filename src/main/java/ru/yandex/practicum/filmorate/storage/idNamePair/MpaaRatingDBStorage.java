@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.model.MpaaRating;
 
 @Component
 public class MpaaRatingDBStorage extends IdNamePairDBStorage<MpaaRating> {
-    private final static String tableName = "ratings";
+    private static final String tableName = "ratings";
 
     @Autowired
     public MpaaRatingDBStorage(JdbcTemplate template) {
