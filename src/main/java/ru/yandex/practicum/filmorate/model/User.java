@@ -18,7 +18,8 @@ import java.util.Set;
 public class User {
     @Getter
     private final Set<Integer> friends = new HashSet<>();
-    private int id;
+    private final Set<FriendshipRequest> requests = new HashSet<>();
+    private Integer id;
     @Email
     private String email;
     @NotBlank
@@ -27,6 +28,18 @@ public class User {
     private String name;
     @Past
     private LocalDate birthday;
+
+    public static User copyOf(User user) {
+        User copy = new User();
+        copy.id = user.id;
+        copy.name = user.name;
+        copy.email = user.email;
+        copy.birthday = user.birthday;
+        copy.login = user.login;
+        copy.friends.addAll(user.friends);
+        copy.requests.addAll(user.requests);
+        return copy;
+    }
 
     public void accept(Visitor<User> v) {
         v.visit(this);

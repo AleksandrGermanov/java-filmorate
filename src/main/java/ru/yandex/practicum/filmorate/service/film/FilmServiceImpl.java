@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.exceptions.MatchesNotFoundException;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Validated
 public class FilmServiceImpl implements FilmService {
@@ -25,22 +27,31 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void addLike(User whoLikes, Film film) {
+        log.info("Proceeding addLike() with user = " + whoLikes.getId() + " and film " + film.getId() + ".");
         validateId(film);
         userService.validateId(whoLikes);
-        Visitor<Film> likeGiver = (fi) -> fi.getLikes().add(whoLikes.getId());
+        Visitor<Film> likeGiver = (fi) -> {
+            fi.getLikes().add(whoLikes.getId());
+            storage.update(fi);
+        };
         film.accept(likeGiver);
     }
 
     @Override
     public void removeLike(User whoTakesLikeBack, Film film) {
+        log.info("Proceeding removeLike() with user = " + whoTakesLikeBack.getId() + " and film " + film.getId() + ".");
         validateId(film);
         userService.validateId(whoTakesLikeBack);
-        Visitor<Film> likeTaker = (fi) -> fi.getLikes().remove(whoTakesLikeBack.getId());
+        Visitor<Film> likeTaker = (fi) -> {
+            fi.getLikes().remove(whoTakesLikeBack.getId());
+            storage.update(fi);
+        };
         film.accept(likeTaker);
     }
 
     @Override
     public List<Film> findMostLiked(int count) {
+        log.info("Proceeding findMostLiked() with count = " + count + ".");
         return storage.findAll().stream()
                 .sorted(Collections.reverseOrder())
                 .limit(count)
@@ -66,23 +77,27 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film create(Film film) {
+        log.info("Proceeding findMostLiked() with film = " + film.getId() + ".");
         return storage.create(film);
     }
 
     @Override
     public Film retrieve(int id) {
+        log.info("Proceeding retrieve() with film = " + id + ".");
         validateId(id);
         return storage.retrieve(id);
     }
 
     @Override
     public Film update(Film film) {
+        log.info("Proceeding retrieve() with film = " + film.getId() + ".");
         validateId(film);
         return storage.update(film);
     }
 
     @Override
     public List<Film> findAll() {
+        log.info("Proceeding findAll().");
         return storage.findAll();
     }
 }
