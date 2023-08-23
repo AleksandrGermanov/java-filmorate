@@ -1,23 +1,24 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.film.FilmServiceImpl;
-import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.model.MpaaRating;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FilmControllerTests {
-    FilmController fc = new FilmController(new UserServiceImpl(new InMemoryUserStorage()),
-            new FilmServiceImpl(new InMemoryFilmStorage(),
-                    new UserServiceImpl(new InMemoryUserStorage())));
+    private final FilmController fc;
     Film film;
 
     @BeforeEach
@@ -28,6 +29,7 @@ public class FilmControllerTests {
         film.setDescription("description");
         film.setReleaseDate(LocalDate.of(2023, 7, 7));
         film.setDuration(1);
+        film.setMpa(new MpaaRating(1, "Комедия"));
     }
 
     @Test
@@ -37,27 +39,20 @@ public class FilmControllerTests {
 
     @Test
     void controllerSetsIdOnCreation() {
-        int oldId = film.getId();
-
-        fc.createFilm(film);
-        assertNotEquals(oldId, film.getId());
+        assertNull(film.getId());
+        assertNotNull(fc.createFilm(film).getId());
     }
 
     @Test
-    void controllerPutsFilmToMapOnCreation() {
-        fc.createFilm(film);
-        assertEquals(film, InMemoryFilmStorage.getFilms().get(film.getId()));
-    }
-
-    @Test
-    void controllerReturnsSameFilmAsInMapOnCreation() {
-        assertEquals(fc.createFilm(film), InMemoryFilmStorage.getFilms().get(film.getId()));
+    void controllerPutsFilmToDBOnCreation() {
+        Film f = fc.createFilm(film);
+        assertTrue(fc.getAllFilms().contains(f));
     }
 
     @Test
     void controllerReturnsSameFilmAsInMapOnUpdate() {
-        fc.createFilm(new Film());
-        film = InMemoryFilmStorage.getFilms().get(1);
-        assertEquals(fc.updateFilm(film), InMemoryFilmStorage.getFilms().get(film.getId()));
+        Film f = fc.createFilm(film);
+        f.setName("NEW_NAME");
+        assertEquals("NEW_NAME", fc.updateFilm(f).getName());
     }
 }

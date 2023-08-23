@@ -1,23 +1,28 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.user.UserServiceImpl;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserControllerTests {
-    UserController uc = new UserController(new UserServiceImpl(new InMemoryUserStorage()));
+    private final UserController uc;
     User user;
 
     @BeforeEach
-    public void createFilm() {
+    public void createUser() {
         user = new User();
 
         user.setName("Name");
@@ -26,28 +31,25 @@ public class UserControllerTests {
         user.setBirthday(LocalDate.of(2023, 7, 7));
     }
 
+
     @Test
+    @Sql(statements = "DELETE FROM users")
     void getAllUsersReturnsArrayList() {
         assertEquals(ArrayList.class, uc.getAllUsers().getClass());
     }
 
     @Test
+    @Sql(statements = "DELETE FROM users")
     void controllerSetsIdOnCreation() {
-        int oldId = user.getId();
-
-        uc.createUser(user);
-        assertNotEquals(oldId, user.getId());
+        assertNull(user.getId());
+        assertNotNull(uc.createUser(user).getId());
     }
 
     @Test
+    @Sql(statements = "DELETE FROM users")
     void controllerPutsUserToMapOnCreation() {
-        uc.createUser(user);
-        assertEquals(user, InMemoryUserStorage.getUsers().get(user.getId()));
-    }
-
-    @Test
-    void controllerReturnsSameUserAsInMapOnCreation() {
-        assertEquals(uc.createUser(user), InMemoryUserStorage.getUsers().get(user.getId()));
+        User u = uc.createUser(user);
+        assertTrue(uc.getAllUsers().contains(u));
     }
 
     @Test
@@ -58,9 +60,10 @@ public class UserControllerTests {
     }
 
     @Test
+    @Sql(statements = "DELETE FROM users")
     void controllerReturnsSameUserAsInMapOnUpdate() {
-        uc.createUser(new User());
-        user = InMemoryUserStorage.getUsers().get(1);
-        assertEquals(uc.updateUser(user), InMemoryUserStorage.getUsers().get(user.getId()));
+        User u = uc.createUser(user);
+        u.setLogin("filmaniac");
+        assertEquals(uc.updateUser(u).getLogin(), u.getLogin());
     }
 }
