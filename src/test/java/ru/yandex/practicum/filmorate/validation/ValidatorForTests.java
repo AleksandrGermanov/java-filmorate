@@ -21,12 +21,4 @@ public class ValidatorForTests<V> {
         }
         return true;
     }
-
-    public boolean isParameterValid(V v, Class<?>... groupMarker) {
-        Set<ConstraintViolation<V>> violations = validator.validate(v, groupMarker);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-        return true;
-    }
 }

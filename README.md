@@ -1,6 +1,38 @@
 # java-filmorate
 
-Filmorate by Aleksandr Germanov
+### Сервис оценки и обсуждения фильмов.
+Разработка web-приложения с использованием SpringBoot, SpringData (JDBC), H2, SLF4J (Logback).
+
+---
+
+
+> [!NOTE]<br>
+> приложение на Java SE 11<br>
+> для запуска приложения необходимо:<br>
+>  - склонировать репозиторий
+>  - проверить и при необходимости освободить 8080 порт
+>  - в терминале с поддержкой Maven и JDK 11 или выше выполнить
+     (из папки с клонированным репозиторием)<br>
+     `mvn package -Dproject.build.sourceEncoding=UTF-8 -Dproject.reporting.outputEncoding=UTF-8`<br>
+     `java -jar ./target/filmorate-0.0.1-SNAPSHOT.jar`
+>
+> После запуска приложения можно воспользоваться [postman-коллекцией](https://github.com/yandex-praktikum/java-filmorate/blob/add-database/postman/sprint.json) 
+    для проверки функциональности приложения
+>
+> Для пользователей Windows можно запустить файл `deploy.cmd` - скрипт
+создаст и запустит jar c проектом (при условии установленного JDK, и если Maven добавлен в PATH).
+
+### Функциональность
+
+- Приложение умеет создавать, изменять, возвращать сущности пользователей, фильмов
+- Возвращает список жанров по запросу.
+- Умеет принимать Http-запросы (Tomcat).
+- Умеет сохранять данные в БД (JDBC-H2).
+- Реализована валидация данных (Hibernate).
+- Реализовано логирование (Logback).
+- Реализована возможность добавления в друзья пользователями друг друга.
+- Реализован рейтинг фильмов по лайкам/дизлайкам.
+
 
 ### DB diagram
 ![DB diagram](/db_diagram.jpg)
@@ -30,45 +62,31 @@ Films_genres, первичным ключом в которой является
 количества ошибок ввода и являются вспомогательными.
 
 ### Примеры запросов
-_Получение списка id всех друзей пользователя_
+_Получение пользователя_
 ```
-SELECT request_exporter_id AS friend_id
-FROM friendship_and_requests
-WHERE request_importer_id = {target_user_id}
-      AND
-      friendship_status_id = 1(accepted)
-UNION
-SELECT request_importer_id AS friend_id
-FROM friendship_and_requests
-WHERE request_exporter_id = {target_user_id}
-      AND friendship_status_id = 1(accepted)
+SELECT u.*, 
+req.request_exporter_id AS request_from, 
+req.request_importer_id AS request_to, 
+req.friendship_status_id AS status_id, 
+s.name AS status_name 
+FROM users AS u 
+LEFT OUTER JOIN friendship_and_requests AS req ON (u.id = req.request_exporter_id 
+OR u.id = req.request_importer_id) 
+LEFT OUTER JOIN friendship_statuses AS s ON req.friendship_status_id = s.id 
+WHERE u.id = ?
 ```
 
-_Получение списка id общих друзей 2-х пользователей_
+_Получение списка всех фильмов_
 ```
-SELECT friend_id
-FROM (
-    SELECT request_exporter_id AS friend_id,
-           request_importer_id AS target_id
-    FROM friendship_and_requests
-    WHERE (
-        request_importer_id = {target_user_id}
-       OR request_importer_id = {target_user2_id}
-       )
-       AND friendship_status_id = 1(accepted)
-    UNION
-    SELECT request_importer_id AS friend_id,
-       request_exporter_id AS target_id
-    FROM friendship_and_requests
-    WHERE (
-        request_exporter_id = {target_user_id}
-         OR request_exporter_id = {target_user2_id}
-        )
-         AND
-         friendship_status_id = 1(accepted)
-)
-GROUP BY friend_id
-HAVING COUNT(target_id) = 2   
+SELECT f.*, fg.genre_id, l.user_id,
+r.name AS rating_name,
+g.name AS genre_name
+FROM films AS f
+LEFT OUTER JOIN films_genres AS fg ON f.id = fg.film_id
+LEFT OUTER JOIN likes AS l ON f.id = l.film_id
+LEFT OUTER JOIN ratings AS r ON f.rating_id = r.id
+LEFT OUTER JOIN genres AS g ON fg.genre_id = g.id
+ORDER BY f.name, f.id  
 ```
 
 _Получение списка id 10ти самых популярных фильмов_
